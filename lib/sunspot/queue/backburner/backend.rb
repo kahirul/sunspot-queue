@@ -10,8 +10,8 @@ module Sunspot::Queue::Backburner
       @configuration = configuration
     end
 
-    def enqueue(job, klass, id)
-      ::Backburner::Worker.enqueue(job, [klass, id], :delay => configuration.delay || 0)
+    def enqueue(job, klass, id, trying = 0)
+      ::Backburner::Worker.enqueue(job, [klass, id, trying], :delay => configuration.delay || 0)
     end
 
     def index(klass, id)
