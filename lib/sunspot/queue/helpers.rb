@@ -27,5 +27,14 @@ module Sunspot::Queue
       end
       constant
     end
+
+    def retrying(klass, id, trying)
+      backend = Sunspot::Queue::Backburner::Backend.new
+      job = Sunspot::Queue.configuration.index_job || ::Sunspot::Queue::Backburner::IndexJob
+
+      if (retrying_count = constantize(klass).try(:retrying_count).to_i) > trying
+        backend.enqueue(job, klass, id, trying + 1)
+      end
+    end
   end
 end
